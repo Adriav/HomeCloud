@@ -1,0 +1,17 @@
+<div class="navbar">
+  <div class="brand">
+    <span class="sp-brand"><a href="/home" class="active">Inicio</a></span>
+  </div>
+  <ul class="nav-list">
+    @if (isValid) {
+    <li class="user-li">
+      <a (click)="logOut()" href="">Cerrar Sesión</a>
+    </li>
+    <li><a href="/profile"><img src="{{_getProfilePicture()}}" alt="pfp"></a></li>
+
+    } @else {
+    <li class="user-li"><a href="/login">Iniciar Sesión</a></li>
+    <li class="user-li"><a href="/register">Registrarse</a></li>
+    }
+  </ul>
+</div>

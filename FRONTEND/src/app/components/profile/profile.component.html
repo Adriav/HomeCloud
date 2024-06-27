@@ -1,0 +1,198 @@
+<!--
+  FLOPPY DISK SAVE ICON SVG
+
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-floppy2" viewBox="0 0 16 16">
+    <path d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v3.5A1.5 1.5 0 0 1 11.5 6h-7A1.5 1.5 0 0 1 3 4.5V1H1.5a.5.5 0 0 0-.5.5m9.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5z"></path>
+  </svg>
+-->
+
+<div class="principal">
+  <div class="central">
+
+    <!-- LEFT Section -->
+    <div class="section-l">
+      <div class="card" data-bs-theme="dark">
+        <!-- Card Header -->
+        <div class="card-header text-center">
+          <h4>Perfil de {{_getFromUser('name')}}</h4>
+        </div>
+        <div class="card-body">
+          <div class="l-div-body">
+
+            <!-- Load Profile Picture -->
+            <div class="image-div">
+              <img src="{{_getProfilePicture()}}" alt="pfp">
+            </div>
+
+            <!-- Edit or See profile picture button -->
+            <div class="buttons">
+              <input type="file" #fileInput style="display: none" accept="image/*" (change)="_onFileSelected($event)">
+              <button class="btn btn-primary mx-2 my2" (click)="fileInput.click()">Cambiar</button>
+              <a href="{{_getProfilePicture()}}" target="_blank">
+                <button class="btn btn-primary mx-2 my2">Ver Foto</button>
+              </a>
+            </div>
+          </div>
+        </div>
+        <!--      [ DANGER ZONE ]     -->
+        <!--   Delete account button  -->
+        <div class="card-footer text-center" style="background-color: #303030; border-top-color: transparent;">
+          <button class="btn btn-danger my-2" type="button">Eliminar Cuenta</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT Section -->
+    <div class="section-r">
+      <div class="card" data-bs-theme="dark">
+        <div class="card-header text-center">
+          <h4>Información Personal</h4>
+        </div>
+        <div class="card-body">
+          <div class="personal">
+            <!-- Name Box -->
+            <div class="info-box">
+              <div class="left-col">
+                <span>Nombre</span>
+              </div>
+
+              @if (editName) {
+              <!-- New Name Field -->
+              <div class="right-col">
+                <form [formGroup]="userForm" (submit)="_saveEdit('name')">
+                  <input placeholder="{{_getFromUser('name')}}" type="text" formControlName="new_name">
+                  <!-- Buttons -->
+                  <button class="icon-button" type="submit">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                      class="bi bi-floppy2" viewBox="0 0 16 16">
+                      <path
+                        d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v3.5A1.5 1.5 0 0 1 11.5 6h-7A1.5 1.5 0 0 1 3 4.5V1H1.5a.5.5 0 0 0-.5.5m9.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5z">
+                      </path>
+                    </svg>
+                  </button>
+                  <button class="icon-button" type="button" (click)="_toggleEdit('name')">
+                    <i class="bi bi-x-square"></i>
+                  </button>
+                </form>
+              </div>
+              } @else {
+              <div class="right-col">
+                <p>{{_getFromUser('name')}}</p>
+              </div>
+              <button class="icon-button" type="button" (click)="_toggleEdit('name')">
+                <i class="bi bi-pen"></i>
+              </button>
+              }
+            </div>
+
+            <!-- Last Name Box -->
+            <div class="info-box">
+              <div class="left-col">
+                <span>Apellido</span>
+              </div>
+
+              @if (editLastName) {
+              <!-- New Last Name Field -->
+              <div class="right-col">
+                <form [formGroup]="userForm" (submit)="_saveEdit('last_name')">
+                  <input placeholder="{{_getFromUser('last_name')}}" type="text" formControlName="new_last_name">
+                  <!-- Buttons -->
+                  <button class="icon-button" type="submit">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                      class="bi bi-floppy2" viewBox="0 0 16 16">
+                      <path
+                        d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v3.5A1.5 1.5 0 0 1 11.5 6h-7A1.5 1.5 0 0 1 3 4.5V1H1.5a.5.5 0 0 0-.5.5m9.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5z">
+                      </path>
+                    </svg>
+                  </button>
+                  <button class="icon-button" type="button" (click)="_toggleEdit('last_name')">
+                    <i class="bi bi-x-square"></i>
+                  </button>
+                </form>
+
+              </div>
+              } @else {
+              <div class="right-col">
+                <p>{{_getFromUser('last_name')}}</p>
+              </div>
+              <button class="icon-button" type="button" (click)="_toggleEdit('last_name')">
+                <i class="bi bi-pen"></i>
+              </button>
+              }
+            </div>
+
+            <!-- Email Box -->
+            <div class="info-box">
+              <div class="left-col">
+                <span>Correo</span>
+              </div>
+
+              @if (editEmail) {
+              <!-- New Email Field -->
+              <div class="right-col">
+                <form [formGroup]="userForm" (submit)="_saveEdit('email')">
+                  <input placeholder="{{_getFromUser('email')}}" type="text" formControlName="new_email">
+                  <!-- Buttons -->
+                  <button class="icon-button" type="submit">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                      class="bi bi-floppy2" viewBox="0 0 16 16">
+                      <path
+                        d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v3.5A1.5 1.5 0 0 1 11.5 6h-7A1.5 1.5 0 0 1 3 4.5V1H1.5a.5.5 0 0 0-.5.5m9.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5z">
+                      </path>
+                    </svg>
+                  </button>
+                  <button class="icon-button" type="button" (click)="_toggleEdit('email')">
+                    <i class="bi bi-x-square"></i>
+                  </button>
+
+                </form>
+
+              </div>
+              } @else {
+              <div class="right-col">
+                <p>{{_getFromUser('email')}}</p>
+              </div>
+              <button class="icon-button" type="button" (click)="_toggleEdit('email')">
+                <i class="bi bi-pen"></i>
+              </button>
+              }
+            </div>
+
+            <!-- Password Changes -->
+            <div class="bottom-section">
+              <div class="pass-change">
+                <!-- BEGIN Form -->
+
+
+                <!-- New Password -->
+                <form [formGroup]="userForm" (submit)="_changePassword()">
+                  <div class="form-floating">
+                    <input class="form-control" placeholder="Nueva Contraseña" type="password"
+                      formControlName="new_password" data-bs-theme="dark">
+                    <label for="floatinginput1">Nueva Contraseña</label>
+                  </div>
+                  <br>
+                  <!-- Repeat Password -->
+                  <div class="form-floating">
+                    <input class="form-control" placeholder="Repetir Contraseña" type="password"
+                      formControlName="repeat_password" data-bs-theme="dark">
+                    <label for="floatingTextarea2">Repetir Contraseña</label>
+                  </div>
+                  <br>
+                  <!-- Confirm Button -->
+                  <div class="button-div">
+                    <button class="btn btn-primary" type="submit">Cambiar Contraseña</button>
+                  </div>
+                </form>
+
+
+                <!-- END Form -->
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

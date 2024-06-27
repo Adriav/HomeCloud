@@ -1,0 +1,11 @@
+<!-- Subir un solo archivo -->
+<input type="file" (change)="onFilesSelected($event)">
+
+<!-- Subir multiples archivos -->
+<input type="file" multiple (change)="onFilesSelected($event)">
+<button (click)="onUploadFiles()">Subir archivos</button>
+
+<!-- Subir solo una imagen -->
+<input type="file" #fileInput style="display: none" accept="image/*" (change)="onFilesSelected($event)">
+<button (click)="fileInput.click()">Seleccionar imágenes</button>
+<button (click)="onUploadFiles()">Subir imágenes</button>

@@ -1,0 +1,63 @@
+.navbar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  overflow: hidden;
+  background-color: #2a2b2c;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-list {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  padding-right: 2vw;
+}
+
+.sp-brand a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+.sp-brand a:hover {
+  background-color: #2f4d6c;
+}
+
+li {
+  display: inline;
+  float: left;
+}
+
+.user-li a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+.active {
+  background-color: #375a7f;
+}
+
+img {
+  width: 44px;
+  min-width: 32px;
+  min-height: 32px;
+  max-height: 44px;
+  max-width: 44px;
+  margin: 1px;
+  padding: 1px;
+  border: 1px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+li:hover {
+  cursor: pointer;
+  background-color: #252525;
+}

@@ -1,0 +1,30 @@
+.principal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: calc(100vh - 86px);
+  width: 100%;
+  background-color: #2a2b2c;
+}
+
+.card {
+  min-width: auto;
+  min-height: 400px;
+}
+
+.box-1 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.box-1 div {
+  margin: 5px;
+}
+
+a {
+  text-decoration: none;
+  font-size: 14pt;
+  font-weight: 500;
+  color: #2194eb;
+}

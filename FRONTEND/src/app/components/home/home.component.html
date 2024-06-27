@@ -1,0 +1,295 @@
+<div class="principal">
+  <!-- Left Nav column -->
+  <nav class="l-nav">
+    <!-- Create Buttons -->
+    <div class="create">
+      <div style="display: block;width: 100%; margin: 10px auto">
+        <button style="width: 100%;" type="button" class="btn btn-secondary btn-modal" data-bs-toggle="modal"
+          data-bs-target="#newFolderModal">
+          Crear Carpeta
+        </button>
+      </div>
+      <div style="display: block;width: 100%; margin: 10px auto">
+        <input type="file" #fileInput style="display: none" multiple (change)="uploadFiles($event)">
+        <button style="width: 100%;" type="button" class="btn btn-primary" (click)="fileInput.click()">
+          Subir Archivo
+        </button>
+      </div>
+    </div>
+
+    <!-- Favorite Section -->
+    <div class="favorite">
+      <nav>
+        <h5 style="color: #2194eb; font-weight: bold;">Favoritos</h5>
+        <ul>
+          @for (favorite of userFavorites; track favorite.folder) {
+          <li>
+            @if (favorite.public) {
+            <a href="/public/{{favorite.folder}}" style="color: #34c6f6;">{{favorite.folder_name}}</a>
+            } @else {
+            <a href="/home/{{favorite.folder}}" style="color: #ffc211;">{{favorite.folder_name}}</a>
+            }
+          </li>
+          }
+        </ul>
+      </nav>
+    </div>
+  </nav>
+
+  <!-- Main file navigation -->
+  <div class="contents">
+    <div class="card" data-bs-theme="dark">
+      <div class="card-header text-center" style="height: 65px;">
+        <!-- LOADING BAR -->
+        <div class="progress" *ngIf="barWidth!='0%'">
+          <div class="progress-bar progress-bar-striped progress-bar-animated bg-info" role="progressbar"
+            aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" [style.width]="barWidth">
+          </div>
+        </div>
+        <!-- Show the percentage number -->
+        <span [innerHTML]="'Subiendo: ' + barWidth" *ngIf="barWidth!='0%'"></span>
+        <!-- END Progress Bar Element -->
+
+        <!-- DOWNLOADING BAR -->
+        <div class="progress" *ngIf="progress >= 0">
+          <div class="progress-bar progress-bar-striped progress-bar-animated bg-info" role="progressbar"
+            aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" [style.width]="progress.toString()+'%'">
+          </div>
+        </div>
+        <!-- Show the percentage number -->
+        <span [innerHTML]="'Descargando: ' + progress" *ngIf="progress >= 0"></span>
+        <!-- END Downloading Progress Bar Element -->
+
+
+        <!-- CURRENT PATH -->
+        <div style="text-align: left; display: flex; justify-content: space-between;"
+          *ngIf="barWidth == '0%' && progress < 0">
+          <div style="display: flex;">
+            <mat-icon class="mx-3" style="color: #ffc211;">lock</mat-icon>
+            @if (getParentFolderName() && getParentFolder() != 'home') {
+            <h4><a href="home/{{getParentFolder()}}">{{getParentFolderName()}}</a>
+              ►
+              <b style="color: white;">{{getCurrentFolderName()}}</b>
+            </h4>
+            } @else if (getParentFolder() == 'home') {
+            <h4><a href="{{getParentFolder()}}">{{getParentFolderName()}}</a>
+              ► <b style="color: white;">{{getCurrentFolderName()}}</b>
+            </h4>
+            } @else {
+            <h4>{{getCurrentFolderName()}}</h4>
+            }
+          </div>
+          <button type="button" class="btn btn-info" (click)="navigatePublic()">
+            Ir a Carpeta Pública
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Folder and File List -->
+      <div class="card-body">
+        <!-- Header with the column description -->
+        <div class="row header-row"
+          style="height: 50px; padding: 5px 0; border-bottom: 1px whitesmoke solid; margin-bottom: 20px;">
+          <div class="col-lg-5" style="font-weight: bold;"> Nombre</div>
+          <div class="col-lg-2" style="font-weight: bold;"> Creado Por:</div>
+          <div class="col-lg-2" style="font-weight: bold;"> Última Modificación</div>
+          <div class="col-lg-1" style="font-weight: bold;"> Tamaño </div>
+          <div class="col-lg-2" style="font-weight: bold; display: flex; justify-content: center;">
+            Opciones</div>
+        </div>
+
+
+        <!-- FOLDER LIST -->
+        @for (folder of userFolders; track folder._id) {
+        @if (folder._id) {
+        <div class="row file-row" style="height: 50px;" (mouseenter)="showButtons[folder._id] = true"
+          (mouseleave)="showButtons[folder._id] = false">
+          <div class="col-lg-5" style="cursor: pointer;" (click)="_navigate(folder._id)">
+            <mat-icon class="mx-3 py-1">folder</mat-icon>{{folder.name}}
+          </div>
+          <div class="col-lg-2"> {{userName[folder.owner]}}</div>
+          <div class="col-lg-2"> {{folder.updatedAt}}</div>
+          <div class="col-lg-1"> — </div>
+          <div class="col-lg-2">
+
+            <!-- BUTTONS -->
+            <div class="buttons" *ngIf="showButtons[folder._id]">
+              <!-- FAV BUTTON -->
+              <button class="btn btn-secondary" (click)="toggleFavorite(folder._id)">
+                @if (_buttonFavorites(folder._id)) {
+                <mat-icon>favorite</mat-icon>
+                } @else {
+                <mat-icon>favorite_border</mat-icon>
+                }
+              </button>
+
+              <!-- EDIT BUTTON -->
+              <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#updateFolderNameModal"
+                (click)="setSelectedFolder(folder._id, folder.name, folder.owner)">
+                <mat-icon>edit</mat-icon>
+              </button>
+
+              <!-- DELETE BUTTON -->
+              <button class="btn btn-secondary" (click)="deleteFolder(folder._id, folder.name)">
+                <mat-icon style="color: #e74c3c">delete</mat-icon>
+              </button>
+
+              <div class="dropdown">
+                <button class="dropbtn">Dropdown</button>
+                <div class="dropdown-content">
+                  <a href="#">Link 1</a>
+                  <a href="#">Link 2</a>
+                  <a href="#">Link 3</a>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+        }
+        }
+
+        <!-- FILE LIST -->
+        @for (file of userFiles; track file._id) {
+        <div class="row file-row" style="height: 50px;" (mouseenter)="showButtons[file._id] = true"
+          (mouseleave)="showButtons[file._id] = false">
+          <div class="col-lg-5" style="cursor: pointer;" (click)="seeFilePreview(file.owner, file.file_name)">
+            <mat-icon class="mx-3 py-1" style="color: #f28b82;">insert_drive_file</mat-icon>{{file.file_name}}
+          </div>
+          <div class="col-lg-2"> {{userName[file.owner]}}</div>
+          <div class="col-lg-2"> {{file.updatedAt}}</div>
+          <div class="col-lg-1"> {{showSize(file.size)}} </div>
+          <div class="col-lg-2">
+
+            <!-- BUTTONS -->
+            <div class="buttons" *ngIf="showButtons[file._id]">
+
+              <!-- DOWNLOAD BUTTON -->
+              @if (showSize(file.size).includes('Gb')) {
+              <button class="btn btn-secondary" (click)="seeFilePreview(file.owner, file.file_name)">
+                <mat-icon>download</mat-icon>
+              </button>
+              } @else {
+              <button class="btn btn-secondary" (click)="downloadFile(file.file_name)">
+                <mat-icon>download</mat-icon>
+              </button>
+              }
+
+              <!-- EDIT BUTTON -->
+              <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#updateFileNameModal"
+                (click)="setSelectedFile(file._id, file.file_name, file.extension_type, file.owner)">
+                <mat-icon>edit</mat-icon>
+              </button>
+
+              <!-- DELETE BUTTON -->
+              <button class="btn btn-secondary" (click)="deleteUserFile(file._id, file.file_name)">
+                <mat-icon style="color: #e74c3c">delete</mat-icon>
+              </button>
+
+              <div class="dropdown">
+                <button class="dropbtn">Dropdown</button>
+                <div class="dropdown-content">
+                  <a href="#">Link 1</a>
+                  <a href="#">Link 2</a>
+                  <a href="#">Link 3</a>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+        }
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal to Create a New Folder -->
+<div id="newFolderModal" class="modal fade modal-dark" role="dialog" data-bs-theme="dark">
+  <div class="modal-dialog modal-dialog-centered modal-sm">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-body">
+        <form>
+          <div class="mb-3">
+            <label for="folderName" class="form-label" style="color: whitesmoke;">Nombre de la carpeta:</label>
+            <input type="text" class="form-control" id="folderName" [(ngModel)]="newFolderName"
+              [ngModelOptions]="{standalone: true}" placeholder="Nueva carpeta">
+          </div>
+        </form>
+        <div class="modal-btn">
+          <button type="button" class="btn mx-2 btn-danger" data-bs-dismiss="modal"
+            (click)="_clearFolderName()">Cancelar</button>
+          <button type="button" class="btn btn-primary" (click)="createFolder()" data-bs-dismiss="modal"
+            style="border-color: transparent;">
+            Crear
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- Modal to Update a Folder's Name -->
+<div id="updateFolderNameModal" class="modal fade modal-dark" role="dialog" data-bs-theme="dark">
+  <div class="modal-dialog modal-dialog-centered modal-sm">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-body">
+        <form>
+          <div class="mb-3">
+            <label for="updateFolderName" class="form-label" style="color: whitesmoke;">Renombrar Carpeta</label>
+            <input type="text" class="form-control" id="updateFolderName" [(ngModel)]="newUpdateFolderName"
+              [ngModelOptions]="{standalone: true}" placeholder="{{selectedFolderName}}">
+          </div>
+        </form>
+        <div class="modal-btn">
+          <button type="button" class="btn mx-2 btn-danger" data-bs-dismiss="modal"
+            (click)="_clearUpdateFolderName()">Cancelar</button>
+          <button type="button" class="btn btn-primary" (click)="updateFolderName()" data-bs-dismiss="modal"
+            style="border-color: transparent;">
+            Cambiar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+<!-- Modal to update a File's name -->
+<div id="updateFileNameModal" class="modal fade modal-dark" role="dialog" data-bs-theme="dark">
+  <div class="modal-dialog modal-dialog-centered modal-sm">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-body">
+        <form>
+          <div class="mb-3">
+            <label for="updateFileName" class="form-label" style="color: whitesmoke;">Renombrar Archivo</label>
+            <input type="text" class="form-control" id="updateFileName" [(ngModel)]="newUpdateFileName"
+              [ngModelOptions]="{standalone: true}" placeholder="{{selectedFileName}}">
+          </div>
+        </form>
+        <div class="modal-btn">
+          <button type="button" class="btn mx-2 btn-danger" data-bs-dismiss="modal"
+            (click)="_clearUpdateFileName()">Cancelar</button>
+          <button type="button" class="btn btn-primary" (click)="updateFileName()" data-bs-dismiss="modal"
+            style="border-color: transparent;">
+            Cambiar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
